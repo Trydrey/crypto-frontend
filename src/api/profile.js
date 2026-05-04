@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getProfile } from "../api/profile";
+import API_URL from "../config/api";
+
+fetch(`${API_URL}/api/login`)
 
 const Profile = () => {
   const [user, setUser] = useState(null);
