@@ -1,4 +1,6 @@
-import { API_BASE_URL } from "../config/api";
+import API_URL from "../config/api";
+
+fetch(`${API_URL}/api/login`)
 
 export async function getCrypto() {
   const res = await fetch(`${API_BASE_URL}/crypto`);
