@@ -1,4 +1,5 @@
 import API_URL from "../config/api"; 
+fetch(`${API_URL}/api/login`)
 
 async function login(email, password) {
   const res = await fetch(`${API_BASE_URL}/login`, {
