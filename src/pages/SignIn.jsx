@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import Button from '../components/common/Button';
 import { login } from '../api/auth';
 import { useNavigate } from 'react-router-dom';
-import API_URL from "../config/api";
 
-fetch(`${API_URL}/api/crypto`)
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
