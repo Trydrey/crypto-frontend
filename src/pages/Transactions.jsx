@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Button from '../components/common/Button';
 import { useNavigate } from 'react-router-dom';
 
 const Transactions = () => {
@@ -7,21 +6,21 @@ const Transactions = () => {
   const [filter, setFilter] = useState('all');
   const [dateRange, setDateRange] = useState('all');
 
-  // ✅ FIXED: replaced undefined useAuth() with localStorage check
   const isLoggedIn = !!localStorage.getItem('token');
-
-  // ✅ FIXED: replaced undefined useTransactions() with empty array fallback
   const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
 
   if (!isLoggedIn) {
     return (
-      <main className="pt-16 min-h-screen bg-gray-50">
+      <main className="pt-16 min-h-screen bg-pink-950">
         <div className="container mx-auto px-4 py-12 text-center">
-          <h1 className="text-3xl font-bold mb-4">Please Sign In</h1>
-          <p className="text-gray-600 mb-8">You need to be logged in to view your transactions.</p>
-          <Button variant="primary" onClick={() => navigate('/signin')}>
+          <h1 className="text-3xl font-bold mb-4 text-pink-100">Please Sign In</h1>
+          <p className="text-pink-300 mb-8">You need to be logged in to view your transactions.</p>
+          <button
+            onClick={() => navigate('/signin')}
+            className="px-6 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-500 transition-colors"
+          >
             Go to Sign In
-          </Button>
+          </button>
         </div>
       </main>
     );
@@ -29,23 +28,21 @@ const Transactions = () => {
 
   const filteredTransactions = transactions.filter(t => {
     if (filter !== 'all' && t.type !== filter) return false;
-
     if (dateRange !== 'all') {
       const days = parseInt(dateRange);
       const cutoff = new Date();
       cutoff.setDate(cutoff.getDate() - days);
       if (new Date(t.timestamp) < cutoff) return false;
     }
-
     return true;
   });
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'completed': return 'text-green-600 bg-green-100';
-      case 'pending': return 'text-yellow-600 bg-yellow-100';
-      case 'failed': return 'text-red-600 bg-red-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case 'completed': return 'text-green-400 bg-green-900/50';
+      case 'pending': return 'text-yellow-400 bg-yellow-900/50';
+      case 'failed': return 'text-red-400 bg-red-900/50';
+      default: return 'text-pink-300 bg-pink-800';
     }
   };
 
@@ -64,56 +61,55 @@ const Transactions = () => {
   const totalSells = filteredTransactions.filter(t => t.type === 'sell').reduce((sum, t) => sum + t.total, 0);
 
   return (
-    <main className="pt-16 min-h-screen bg-gray-50">
+    <main className="pt-16 min-h-screen bg-pink-950">
       <div className="container mx-auto px-4 py-12">
+
         {/* Header */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold">Transaction History</h1>
-            <p className="text-gray-600">View all your trading activity</p>
+            <h1 className="text-3xl font-bold text-pink-100">Transaction History</h1>
+            <p className="text-pink-400">View all your trading activity</p>
           </div>
-          <Button variant="outline" onClick={() => navigate('/dashboard')} className="mt-4 md:mt-0">
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="mt-4 md:mt-0 px-4 py-2 border border-pink-700 text-pink-300 rounded-lg hover:bg-pink-800 transition-colors"
+          >
             ← Back to Dashboard
-          </Button>
+          </button>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <p className="text-sm text-gray-500 mb-1">Total Volume</p>
-            <p className="text-xl font-bold">${totalVolume.toLocaleString()}</p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <p className="text-sm text-gray-500 mb-1">Total Buys</p>
-            <p className="text-xl font-bold text-green-600">${totalBuys.toLocaleString()}</p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <p className="text-sm text-gray-500 mb-1">Total Sells</p>
-            <p className="text-xl font-bold text-red-600">${totalSells.toLocaleString()}</p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <p className="text-sm text-gray-500 mb-1">Transactions</p>
-            <p className="text-xl font-bold">{filteredTransactions.length}</p>
-          </div>
+          {[
+            { label: 'Total Volume', value: `$${totalVolume.toLocaleString()}`, color: 'text-white' },
+            { label: 'Total Buys', value: `$${totalBuys.toLocaleString()}`, color: 'text-green-400' },
+            { label: 'Total Sells', value: `$${totalSells.toLocaleString()}`, color: 'text-red-400' },
+            { label: 'Transactions', value: filteredTransactions.length, color: 'text-white' },
+          ].map((stat) => (
+            <div key={stat.label} className="bg-pink-900 border border-pink-800 p-4 rounded-lg shadow-lg">
+              <p className="text-sm text-pink-400 mb-1">{stat.label}</p>
+              <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
+            </div>
+          ))}
         </div>
 
         {/* Filters */}
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6">
+        <div className="bg-pink-900 border border-pink-800 p-4 rounded-lg shadow-lg mb-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex space-x-2">
               {['all', 'buy', 'sell'].map((type) => (
                 <button
                   key={type}
                   onClick={() => setFilter(type)}
-                  className={`px-4 py-2 rounded-lg transition ${
+                  className={`px-4 py-2 rounded-lg transition-colors ${
                     filter === type
-                      ? type === 'buy' ? 'bg-green-600 text-white'
-                      : type === 'sell' ? 'bg-red-600 text-white'
-                      : 'bg-blue-600 text-white'
-                      : 'bg-gray-100 hover:bg-gray-200'
+                      ? type === 'buy' ? 'bg-green-700 text-white'
+                      : type === 'sell' ? 'bg-red-800 text-white'
+                      : 'bg-pink-600 text-white'
+                      : 'bg-pink-800 text-pink-200 hover:bg-pink-700'
                   }`}
                 >
-                  {type.charAt(0).toUpperCase() + type.slice(1)}{type === 'all' ? '' : 's'}
+                  {type === 'all' ? 'All' : type === 'buy' ? 'Buys' : 'Sells'}
                 </button>
               ))}
             </div>
@@ -121,7 +117,7 @@ const Transactions = () => {
             <select
               value={dateRange}
               onChange={(e) => setDateRange(e.target.value)}
-              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-2 bg-pink-800 border border-pink-700 text-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
             >
               <option value="all">All Time</option>
               <option value="7">Last 7 Days</option>
@@ -133,27 +129,27 @@ const Transactions = () => {
         </div>
 
         {/* Transactions List */}
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="bg-pink-900 border border-pink-800 rounded-lg shadow-lg overflow-hidden">
           {filteredTransactions.length > 0 ? (
-            <div className="divide-y divide-gray-200">
+            <div className="divide-y divide-pink-800">
               {filteredTransactions.map((transaction) => (
-                <div key={transaction.id} className="p-6 hover:bg-gray-50 transition">
+                <div key={transaction.id} className="p-6 hover:bg-pink-800/50 transition-colors">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div className="flex items-center space-x-4 mb-4 md:mb-0">
                       <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl ${
-                        transaction.type === 'buy' ? 'bg-green-100' :
-                        transaction.type === 'sell' ? 'bg-red-100' : 'bg-blue-100'
+                        transaction.type === 'buy' ? 'bg-green-900/50' :
+                        transaction.type === 'sell' ? 'bg-red-900/50' : 'bg-pink-800'
                       }`}>
                         {getTypeIcon(transaction.type)}
                       </div>
                       <div>
                         <div className="flex items-center space-x-2">
-                          <h3 className="font-bold text-lg">{transaction.symbol}</h3>
+                          <h3 className="font-bold text-lg text-pink-100">{transaction.symbol}</h3>
                           <span className={`text-xs px-2 py-1 rounded ${getStatusColor(transaction.status)}`}>
                             {transaction.status}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-pink-400">
                           {transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)} •{' '}
                           {new Date(transaction.timestamp).toLocaleDateString()} at{' '}
                           {new Date(transaction.timestamp).toLocaleTimeString()}
@@ -163,18 +159,18 @@ const Transactions = () => {
 
                     <div className="flex items-center space-x-8">
                       <div className="text-right">
-                        <p className="text-sm text-gray-500">Amount</p>
-                        <p className="font-medium">{transaction.amount} {transaction.symbol}</p>
+                        <p className="text-sm text-pink-400">Amount</p>
+                        <p className="font-medium text-pink-200">{transaction.amount} {transaction.symbol}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-500">Price</p>
-                        <p className="font-medium">${transaction.price.toLocaleString()}</p>
+                        <p className="text-sm text-pink-400">Price</p>
+                        <p className="font-medium text-pink-200">${transaction.price.toLocaleString()}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-500">Total</p>
+                        <p className="text-sm text-pink-400">Total</p>
                         <p className={`font-bold text-lg ${
-                          transaction.type === 'buy' ? 'text-green-600' :
-                          transaction.type === 'sell' ? 'text-red-600' : 'text-blue-600'
+                          transaction.type === 'buy' ? 'text-green-400' :
+                          transaction.type === 'sell' ? 'text-red-400' : 'text-pink-300'
                         }`}>
                           ${transaction.total.toLocaleString()}
                         </p>
@@ -183,7 +179,7 @@ const Transactions = () => {
                   </div>
 
                   {transaction.note && (
-                    <div className="mt-3 text-sm text-gray-500 bg-gray-50 p-2 rounded">
+                    <div className="mt-3 text-sm text-pink-400 bg-pink-800/50 p-2 rounded border border-pink-700">
                       📝 {transaction.note}
                     </div>
                   )}
@@ -193,14 +189,18 @@ const Transactions = () => {
           ) : (
             <div className="text-center py-16">
               <div className="text-6xl mb-4">📭</div>
-              <h3 className="text-xl font-bold mb-2">No transactions yet</h3>
-              <p className="text-gray-500 mb-6">Start trading to see your transaction history</p>
-              <Button variant="primary" onClick={() => navigate('/explore')}>
+              <h3 className="text-xl font-bold mb-2 text-pink-100">No transactions yet</h3>
+              <p className="text-pink-400 mb-6">Start trading to see your transaction history</p>
+              <button
+                onClick={() => navigate('/explore')}
+                className="px-6 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-500 transition-colors"
+              >
                 Explore Cryptocurrencies
-              </Button>
+              </button>
             </div>
           )}
         </div>
+
       </div>
     </main>
   );

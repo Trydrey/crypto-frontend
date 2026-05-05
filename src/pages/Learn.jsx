@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 const Learn = () => {
   const articles = [
@@ -11,25 +11,28 @@ const Learn = () => {
   ];
 
   return (
-    <main className="pt-16">
+    <main className="pt-16 bg-pink-950 min-h-screen">
       <section className="container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold mb-4">Learn about Crypto</h1>
-        <p className="text-xl text-gray-600 mb-12">Educational resources for beginners and experts</p>
-        
+        <h1 className="text-4xl font-bold mb-4 text-pink-100">Learn about Crypto</h1>
+        <p className="text-xl text-pink-300 mb-12">Educational resources for beginners and experts</p>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.map((article, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="h-48 bg-gradient-to-r from-blue-500 to-purple-600"></div>
+            <div
+              key={index}
+              className="bg-pink-900 border border-pink-800 rounded-lg shadow-lg overflow-hidden hover:shadow-pink-900/50 hover:border-pink-600 transition-all"
+            >
+              <div className="h-48 bg-gradient-to-r from-pink-800 to-pink-600"></div>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm text-blue-600 font-semibold">{article.category}</span>
-                  <span className="text-sm text-gray-500">{article.readTime} read</span>
+                  <span className="text-sm text-pink-400 font-semibold">{article.category}</span>
+                  <span className="text-sm text-pink-500">{article.readTime} read</span>
                 </div>
-                <h3 className="text-xl font-bold mb-3">{article.title}</h3>
-                <p className="text-gray-600 mb-4">
+                <h3 className="text-xl font-bold mb-3 text-pink-100">{article.title}</h3>
+                <p className="text-pink-300 mb-4">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.
                 </p>
-                <button className="text-blue-600 font-semibold hover:text-blue-800">
+                <button className="text-pink-400 font-semibold hover:text-pink-200 transition-colors">
                   Read more →
                 </button>
               </div>

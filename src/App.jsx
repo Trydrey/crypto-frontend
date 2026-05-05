@@ -12,16 +12,15 @@ import AssetDetail from './pages/AssetDetail';
 import Transactions from './pages/Transactions';
 import WarningBanner from './components/WarningBanner';
 
-// 🔒 ProtectedRoute: redirects to /signin if user is not logged in
 function ProtectedRoute({ children }) {
-  const isLoggedIn = localStorage.getItem('user'); // Update this to match your auth logic
+  const isLoggedIn = localStorage.getItem('user');
   return isLoggedIn ? children : <Navigate to="/signin" replace />;
 }
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-pink-50 flex flex-col">
+      <div className="min-h-screen bg-pink-950 flex flex-col">
         <Navbar />
         <div className="flex-grow">
           <Routes>
@@ -31,33 +30,9 @@ function App() {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
 
-            {/* 🔒 Protected routes */}
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/transactions"
-              element={
-                <ProtectedRoute>
-                  <Transactions />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/asset/:symbol"
-              element={
-                <ProtectedRoute>
-                  <AssetDetail />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
+            <Route path="/asset/:symbol" element={<ProtectedRoute><AssetDetail /></ProtectedRoute>} />
           </Routes>
         </div>
         <Footer />
