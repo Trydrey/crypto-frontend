@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Button from '../components/common/Button';
 import { useNavigate } from 'react-router-dom';
 
 const Transactions = () => {
-  const { user } = useAuth();
-  const { transactions } = useTransactions();
   const navigate = useNavigate();
   const [filter, setFilter] = useState('all');
   const [dateRange, setDateRange] = useState('all');
 
-  if (!user) {
+  // ✅ FIXED: replaced undefined useAuth() with localStorage check
+  const isLoggedIn = !!localStorage.getItem('token');
+
+  // ✅ FIXED: replaced undefined useTransactions() with empty array fallback
+  const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+  if (!isLoggedIn) {
     return (
       <main className="pt-16 min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-12 text-center">
@@ -25,19 +29,19 @@ const Transactions = () => {
 
   const filteredTransactions = transactions.filter(t => {
     if (filter !== 'all' && t.type !== filter) return false;
-    
+
     if (dateRange !== 'all') {
       const days = parseInt(dateRange);
       const cutoff = new Date();
       cutoff.setDate(cutoff.getDate() - days);
       if (new Date(t.timestamp) < cutoff) return false;
     }
-    
+
     return true;
   });
 
   const getStatusColor = (status) => {
-    switch(status) {
+    switch (status) {
       case 'completed': return 'text-green-600 bg-green-100';
       case 'pending': return 'text-yellow-600 bg-yellow-100';
       case 'failed': return 'text-red-600 bg-red-100';
@@ -46,7 +50,7 @@ const Transactions = () => {
   };
 
   const getTypeIcon = (type) => {
-    switch(type) {
+    switch (type) {
       case 'buy': return '📥';
       case 'sell': return '📤';
       case 'deposit': return '💰';
@@ -97,30 +101,21 @@ const Transactions = () => {
         <div className="bg-white p-4 rounded-lg shadow-md mb-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex space-x-2">
-              <button
-                onClick={() => setFilter('all')}
-                className={`px-4 py-2 rounded-lg transition ${
-                  filter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200'
-                }`}
-              >
-                All
-              </button>
-              <button
-                onClick={() => setFilter('buy')}
-                className={`px-4 py-2 rounded-lg transition ${
-                  filter === 'buy' ? 'bg-green-600 text-white' : 'bg-gray-100 hover:bg-gray-200'
-                }`}
-              >
-                Buys
-              </button>
-              <button
-                onClick={() => setFilter('sell')}
-                className={`px-4 py-2 rounded-lg transition ${
-                  filter === 'sell' ? 'bg-red-600 text-white' : 'bg-gray-100 hover:bg-gray-200'
-                }`}
-              >
-                Sells
-              </button>
+              {['all', 'buy', 'sell'].map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setFilter(type)}
+                  className={`px-4 py-2 rounded-lg transition ${
+                    filter === type
+                      ? type === 'buy' ? 'bg-green-600 text-white'
+                      : type === 'sell' ? 'bg-red-600 text-white'
+                      : 'bg-blue-600 text-white'
+                      : 'bg-gray-100 hover:bg-gray-200'
+                  }`}
+                >
+                  {type.charAt(0).toUpperCase() + type.slice(1)}{type === 'all' ? '' : 's'}
+                </button>
+              ))}
             </div>
 
             <select
@@ -159,13 +154,13 @@ const Transactions = () => {
                           </span>
                         </div>
                         <p className="text-sm text-gray-500">
-                          {transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)} • 
+                          {transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)} •{' '}
                           {new Date(transaction.timestamp).toLocaleDateString()} at{' '}
                           {new Date(transaction.timestamp).toLocaleTimeString()}
                         </p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center space-x-8">
                       <div className="text-right">
                         <p className="text-sm text-gray-500">Amount</p>

@@ -8,6 +8,14 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  // ✅ FIXED: useEffect moved inside the component
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -15,7 +23,7 @@ const SignIn = () => {
 
     if (data.token) {
       localStorage.setItem("token", data.token);
-      navigate("/"); // redirect to home
+      navigate("/");
     } else {
       alert(data.error || "Login failed");
     }
@@ -26,6 +34,11 @@ const SignIn = () => {
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
           <h2 className="text-3xl font-bold text-center mb-8">Sign In</h2>
+
+          {/* ✅ FIXED: <p> tag moved inside the JSX return */}
+          <p className="text-sm text-yellow-600 text-center mb-4">
+            Demo app – do not use your real password
+          </p>
 
           <form onSubmit={handleSubmit}>
             <div className="mb-6">
@@ -68,13 +81,5 @@ const SignIn = () => {
     </main>
   );
 };
-useEffect(() => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    navigate("/dashboard");
-  }
-}, []);
-<p className="text-sm text-yellow-600 text-center mb-4">
-  Demo app – do not use your real password
-</p>
+
 export default SignIn;
