@@ -1,8 +1,6 @@
 import React from 'react';
 import Button from '../components/common/Button';
-import API_URL from "../config/api";
 
-fetch(`${API_URL}/api/crypto`)
 const SignUp = () => {
   return (
     <main className="pt-16 min-h-screen bg-gray-50">
