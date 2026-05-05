@@ -1,3 +1,6 @@
+import React, { useEffect, useState } from "react";
+import { getCrypto } from "../api/crypto"; // make sure this exists
+
 const Home = () => {
   const [crypto, setCrypto] = useState([]);
 
@@ -7,8 +10,6 @@ const Home = () => {
 
   return (
     <main>
-      {/* other sections stay unchanged */}
-
       <section className="container mx-auto px-4 py-16">
         <h2 className="text-3xl font-bold text-center mb-12">
           Popular cryptocurrencies
@@ -38,6 +39,5 @@ const Home = () => {
     </main>
   );
 };
-import API_URL from "../config/api";
 
-fetch(`${API_URL}/api/crypto`)
+export default Home;
