@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import Button from '../components/common/Button';
 import { useNavigate } from 'react-router-dom';
-import API_URL from "../config/api";
 
-fetch(`${API_URL}/api/crypto`)
 const Transactions = () => {
   const { user } = useAuth();
   const { transactions } = useTransactions();
