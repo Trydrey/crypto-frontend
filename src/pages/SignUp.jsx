@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { register } from '../api/auth';    // make sure this exists in your api/auth file
+import { register } from '../api/auth';
 import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
@@ -15,23 +15,26 @@ const SignUp = () => {
     e.preventDefault();
     setErrorMsg('');
 
+    // Basic password confirmation
     if (password !== confirmPassword) {
       setErrorMsg("Passwords do not match");
       return;
     }
 
-    if (loading) return;
+    if (loading) return;           // prevent duplicate requests
     setLoading(true);
+
     try {
       const data = await register({ name, email, password });
       if (data.token) {
         localStorage.setItem("token", data.token);
-        navigate("/");
+        navigate("/");            // redirect to home/dashboard
       } else {
         setErrorMsg(data.error || "Registration failed");
       }
     } catch (err) {
-      setErrorMsg("Network error. Please try again.");
+      // Show the actual error from the server (e.g., "User already exists")
+      setErrorMsg(err.message || "Network error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -42,12 +45,13 @@ const SignUp = () => {
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-md mx-auto bg-pink-900 border border-pink-800 rounded-lg shadow-lg p-8">
           <h2 className="text-3xl font-bold text-center mb-2 text-pink-100">Create Account</h2>
+
           <p className="text-sm text-pink-400 text-center mb-8">
             Demo app – do not use your real password
           </p>
 
           {errorMsg && (
-            <div className="mb-4 p-2 bg-red-800 text-red-200 rounded text-center">
+            <div className="mb-4 p-3 bg-red-900/50 border border-red-700 rounded-lg text-red-200 text-sm text-center">
               {errorMsg}
             </div>
           )}
@@ -65,6 +69,7 @@ const SignUp = () => {
                 required
               />
             </div>
+
             <div className="mb-4">
               <label className="block text-pink-200 text-sm font-bold mb-2" htmlFor="email">Email</label>
               <input
@@ -77,6 +82,7 @@ const SignUp = () => {
                 required
               />
             </div>
+
             <div className="mb-4">
               <label className="block text-pink-200 text-sm font-bold mb-2" htmlFor="password">Password</label>
               <input
@@ -89,6 +95,7 @@ const SignUp = () => {
                 required
               />
             </div>
+
             <div className="mb-6">
               <label className="block text-pink-200 text-sm font-bold mb-2" htmlFor="confirm-password">Confirm Password</label>
               <input
@@ -101,6 +108,7 @@ const SignUp = () => {
                 required
               />
             </div>
+
             <button
               type="submit"
               disabled={loading}
