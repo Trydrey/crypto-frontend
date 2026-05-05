@@ -1,3 +1,7 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Button from "../components/common/Button";
+
 const Dashboard = () => {
   const navigate = useNavigate();
 
@@ -5,7 +9,7 @@ const Dashboard = () => {
     localStorage.getItem("token") ? true : false
   );
 
-  const [watchlist, setWatchlist] = useState(
+  const [watchlist] = useState(
     JSON.parse(localStorage.getItem("watchlist")) || []
   );
 
@@ -70,3 +74,5 @@ const Dashboard = () => {
     </main>
   );
 };
+
+export default Dashboard;
