@@ -1,6 +1,6 @@
 import API_URL from "../config/api";
 
-fetch(`${API_URL}/api/crypto`)
+
 
 export async function getCrypto() {
   const res = await fetch(`${API_URL}/api/crypto`);
