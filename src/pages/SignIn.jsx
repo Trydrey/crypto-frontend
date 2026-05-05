@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,12 +15,20 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = await login(email, password);
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-      navigate("/");
-    } else {
-      alert(data.error || "Login failed");
+    if (loading) return;                     // 🛡️ Prevent duplicate requests
+    setLoading(true);
+    try {
+      const data = await login(email, password);
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        navigate("/");
+      } else {
+        alert(data.error || "Login failed");
+      }
+    } catch (err) {
+      alert("Network error. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -28,7 +37,6 @@ const SignIn = () => {
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-md mx-auto bg-pink-900 border border-pink-800 rounded-lg shadow-lg p-8">
           <h2 className="text-3xl font-bold text-center mb-2 text-pink-100">Sign In</h2>
-
           <p className="text-sm text-pink-400 text-center mb-8">
             Demo app – do not use your real password
           </p>
@@ -44,7 +52,6 @@ const SignIn = () => {
                 required
               />
             </div>
-
             <div className="mb-6">
               <label className="block text-pink-200 text-sm font-bold mb-2">Password</label>
               <input
@@ -55,12 +62,12 @@ const SignIn = () => {
                 required
               />
             </div>
-
             <button
               type="submit"
-              className="w-full mb-4 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-500 transition-colors font-semibold"
+              disabled={loading}
+              className="w-full mb-4 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-500 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Sign In
+              {loading ? "Signing in..." : "Sign In"}
             </button>
           </form>
 
