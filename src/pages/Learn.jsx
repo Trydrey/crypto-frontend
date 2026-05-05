@@ -1,7 +1,5 @@
 import React from 'react';
-import API_URL from "../config/api";
 
-fetch(`${API_URL}/api/crypto`)
 const Learn = () => {
   const articles = [
     { title: 'What is Bitcoin?', category: 'Basics', readTime: '5 min' },
