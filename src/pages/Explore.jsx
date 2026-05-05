@@ -3,9 +3,7 @@ import CryptoRow from '../components/crypto/CryptoRow';  // Changed from ../src/
 import Pagination from '../components/common/Pagination';  // Changed from ../src/components
 import PriceAlertModal from '../components/common/PriceAlertModal';  // Changed from ../src/components
 import { cryptocurrencies } from '../data/mockCryptoData';
-import API_URL from "../config/api";
 
-fetch(`${API_URL}/api/crypto`)
 
 const Explore = () => {
   const [searchTerm, setSearchTerm] = useState('');
