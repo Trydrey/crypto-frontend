@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { getProfile } from "../api/profile";
-import API_URL from "../config/api";
 
+const BASE_URL = "https://crypto-backend-i2i3.onrender.com";
 
+export async function getProfile() {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${BASE_URL}/api/profile`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return await res.json();
+}
 
 const Profile = () => {
   const [user, setUser] = useState(null);

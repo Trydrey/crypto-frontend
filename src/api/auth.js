@@ -1,10 +1,10 @@
+const BASE_URL = "https://crypto-backend-i2i3.onrender.com";
+
 export const login = async (email, password) => {
   try {
-    const res = await fetch(`${API_URL}/api/login`, {
+    const res = await fetch(`${BASE_URL}/api/login`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
     });
 
