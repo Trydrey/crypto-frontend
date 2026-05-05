@@ -1,10 +1,11 @@
-import API_URL from "../config/api"; 
-fetch(`${API_URL}/api/login`)
+import API_URL from "../config/api";
 
-async function login(email, password) {
-  const res = await fetch(`${API_URL}/api/login`), {
+export const login = async (email, password) => {
+  const res = await fetch(`${API_URL}/api/login`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({ email, password })
   });
 
@@ -15,4 +16,4 @@ async function login(email, password) {
   }
 
   return data;
-}
+};
