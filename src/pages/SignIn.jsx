@@ -6,6 +6,7 @@ const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');   // 👈 state for error display
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,7 +16,8 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (loading) return;                     // 🛡️ Prevent duplicate requests
+    setErrorMsg('');          // clear previous error
+    if (loading) return;
     setLoading(true);
     try {
       const data = await login(email, password);
@@ -23,10 +25,12 @@ const SignIn = () => {
         localStorage.setItem("token", data.token);
         navigate("/");
       } else {
-        alert(data.error || "Login failed");
+        // Shouldn't happen if server returns consistent data, but safe fallback
+        setErrorMsg(data.error || "Login failed");
       }
     } catch (err) {
-      alert("Network error. Please try again.");
+      // This now shows the real error (e.g., "User not found", "Invalid credentials")
+      setErrorMsg(err.message || "Network error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -40,6 +44,13 @@ const SignIn = () => {
           <p className="text-sm text-pink-400 text-center mb-8">
             Demo app – do not use your real password
           </p>
+
+          {/* 👇 Error message displayed inline */}
+          {errorMsg && (
+            <div className="mb-4 p-3 bg-red-900/50 border border-red-700 rounded-lg text-red-200 text-sm text-center">
+              {errorMsg}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit}>
             <div className="mb-6">
