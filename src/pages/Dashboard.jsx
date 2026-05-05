@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
-import Button from '../components/common/Button';
-import { useNavigate } from 'react-router-dom';
-
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [watchlist, setWatchlist] = useState([]);
+
+  const [isLoggedIn] = useState(
+    localStorage.getItem("token") ? true : false
+  );
+
+  const [watchlist, setWatchlist] = useState(
+    JSON.parse(localStorage.getItem("watchlist")) || []
+  );
 
   const user = {
-    name: 'John Doe',
+    name: "John Doe",
     portfolio: {
       total: 15234.56,
       profit: 2345.67,
       assets: [
-        { symbol: 'BTC', amount: 0.15, value: 6528.23 },
-        { symbol: 'ETH', amount: 2.5, value: 5701.88 },
-        { symbol: 'SOL', amount: 30, value: 3004.45 }
+        { symbol: "BTC", amount: 0.15, value: 6528.23 },
+        { symbol: "ETH", amount: 2.5, value: 5701.88 },
+        { symbol: "SOL", amount: 30, value: 3004.45 }
       ]
     }
   };
@@ -25,7 +27,7 @@ const Dashboard = () => {
       <main className="pt-16 min-h-screen bg-gray-50">
         <div className="text-center py-12">
           <h1 className="text-3xl font-bold mb-4">Please Sign In</h1>
-          <Button onClick={() => navigate('/signin')}>
+          <Button onClick={() => navigate("/signin")}>
             Go to Sign In
           </Button>
         </div>
@@ -44,13 +46,15 @@ const Dashboard = () => {
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white p-6 rounded-lg shadow">
             <p>Total Balance</p>
-            <p className="text-2xl font-bold">${user.portfolio.total}</p>
+            <p className="text-2xl font-bold">
+              ${user.portfolio.total.toLocaleString()}
+            </p>
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow">
             <p>Profit</p>
             <p className="text-2xl font-bold text-green-600">
-              ${user.portfolio.profit}
+              ${user.portfolio.profit.toLocaleString()}
             </p>
           </div>
 
@@ -66,5 +70,3 @@ const Dashboard = () => {
     </main>
   );
 };
-
-export default Dashboard;
